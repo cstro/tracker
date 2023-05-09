@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import PageHeading from '@/components/PageHeading';
 
 export default function Home() {
   return (
     <main>
-      <Link href="/transaction/create">Create transaction</Link>
+      <PageHeading>Home Page</PageHeading>
     </main>
   );
 }
