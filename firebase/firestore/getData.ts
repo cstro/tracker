@@ -4,8 +4,16 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  orderBy,
   query,
 } from 'firebase/firestore';
+
+import {
+  Account,
+  Category,
+  Source,
+  Transaction,
+} from '@/types/firestore/api.types';
 
 import config from '../config';
 
@@ -17,14 +25,14 @@ const categoriesRef = collection(db, 'categories');
 const accountsRef = collection(db, 'accounts');
 
 export async function fetchTransactions() {
-  const q = query(transactionsRef);
+  const q = query(transactionsRef, orderBy('date', 'desc'));
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map((doc) => {
     return {
       id: doc.id,
       ...doc.data(),
-    };
+    } as Transaction;
   });
 }
 
@@ -36,7 +44,7 @@ export async function fetchCategories() {
     return {
       id: doc.id,
       ...doc.data(),
-    };
+    } as Category;
   });
 }
 
@@ -48,7 +56,7 @@ export async function fetchSources() {
     return {
       id: doc.id,
       ...doc.data(),
-    };
+    } as Source;
   });
 }
 
@@ -60,7 +68,7 @@ export async function fetchAccounts() {
     return {
       id: doc.id,
       ...doc.data(),
-    };
+    } as Account;
   });
 }
 

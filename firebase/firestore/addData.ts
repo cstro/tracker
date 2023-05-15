@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 
 import config from '../config';
+import { Account } from '@/types/firestore/api.types';
 
 const db = getFirestore(config);
 
@@ -52,9 +53,7 @@ export async function createSource(data: CreateSourcePayload) {
   return docRef;
 }
 
-export interface CreateAccountPayload {
-  name: string;
-}
+export interface CreateAccountPayload extends Omit<Account, 'id'> {}
 
 export async function createAccount(data: CreateAccountPayload) {
   const docRef = await addDoc(accountsRef, data);

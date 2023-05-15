@@ -1,10 +1,10 @@
 'use client';
 
-import useAccounts from '@/hooks/useAccounts';
+import { useFirestore } from '@/context/FirestoreContext';
 import { toCurrency } from '@/utils/currency';
 
 export default function AccountsList() {
-  const { accounts } = useAccounts();
+  const { accounts } = useFirestore();
 
   return (
     <>

@@ -1,11 +1,12 @@
-import { Inter } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import Link from 'next/link';
 
 import { AuthContextProvider } from '@/context/AuthContext';
+import { FirestoreProvider } from '@/context/FirestoreContext';
 
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Montserrat({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Create Next App',
@@ -19,46 +20,48 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className + ' bg-slate-50'}>
         <AuthContextProvider>
-          <header>
-            <nav className="bg-gray-800 mb-12">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                  <ul className="flex flex-row items-center space-x-8 text-white text-sm">
-                    <li>
-                      <Link className="hover:underline" href="/">
-                        Home
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:underline" href="/dashboard">
-                        Dashboard
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:underline" href="/categories">
-                        Categories
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:underline" href="/accounts">
-                        Accounts
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:underline" href="/sources">
-                        Sources
-                      </Link>
-                    </li>
-                  </ul>
+          <FirestoreProvider>
+            <header>
+              <nav className="bg-orange-900 mb-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="flex items-center justify-between h-16">
+                    <ul className="flex flex-row items-center space-x-8 text-white text-sm">
+                      <li>
+                        <Link className="hover:underline" href="/">
+                          Home
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="hover:underline" href="/transactions">
+                          Transactions
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="hover:underline" href="/categories">
+                          Categories
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="hover:underline" href="/accounts">
+                          Accounts
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="hover:underline" href="/sources">
+                          Sources
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </nav>
-          </header>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
+              </nav>
+            </header>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {children}
+            </div>
+          </FirestoreProvider>
         </AuthContextProvider>
       </body>
     </html>

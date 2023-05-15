@@ -4,16 +4,16 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import Button from '@/components/Button';
+import { useFirestore } from '@/context/FirestoreContext';
 import {
   CreateCategoryPayload,
   createCategory,
 } from '@/firebase/firestore/addData';
-import useCategories from '@/hooks/useCategories';
 
 export default function CreateCategoryForm() {
   const [name, setName] = useState('');
   const [parent, setParent] = useState('');
-  const { parentCategories } = useCategories();
+  const { parentCategories, refetchCategories } = useFirestore();
 
   const router = useRouter();
 
@@ -37,6 +37,7 @@ export default function CreateCategoryForm() {
     }
 
     await createCategory(data);
+    await refetchCategories();
 
     router.push('/categories');
   };

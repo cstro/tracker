@@ -17,13 +17,11 @@ import {
 import useAccounts from '@/hooks/useAccounts';
 import useCategories from '@/hooks/useCategories';
 import useSources from '@/hooks/useSources';
+import { useFirestore } from '@/context/FirestoreContext';
 
 export default function CreateTransactionForm() {
   const router = useRouter();
-
-  const { groupedCategories } = useCategories();
-  const { sources } = useSources();
-  const { accounts } = useAccounts();
+  const {accounts, sources, groupedCategories, refetchSources} = useFirestore();
 
   const [category, setCategory] = useState('');
   const [source, setSource] = useState('');
@@ -33,6 +31,7 @@ export default function CreateTransactionForm() {
     startDate: dayjs().format('YYYY-MM-DD'),
     endDate: dayjs().format('YYYY-MM-DD'),
   });
+  const [time, setTime] = useState<string>('');
   const [type, setType] = useState<'income' | 'expense'>('expense');
 
   const handleSourceChange = (value: string) => {
@@ -51,28 +50,36 @@ export default function CreateTransactionForm() {
     }
 
     let sourceId = sources.find((s) => s.name === source)?.id;
-    let accountId = accounts.find((a) => a.name === account)?.id;
+    let accountId = accounts.find((a) => a.provider + ' ' + a.name === account)?.id;
 
     if (!sourceId) {
       const newSource = await createSource({ name: source });
+      refetchSources();
       sourceId = newSource.id;
     }
 
     if (!accountId) {
-      const newAccount = await createAccount({ name: account });
-      accountId = newAccount.id;
+      alert('You need to add an account')
+      return
     }
+
+    const tDate = new Date(date.startDate)
+    const [hours, minutes] = time.split(':').map(s => Number(s))
+    tDate.setHours(hours)
+    tDate.setMinutes(minutes)
+    tDate.setSeconds(0)
+    tDate.setMilliseconds(0)
 
     await createTransaction({
       amount: Number(amount),
       type,
-      date: Timestamp.fromDate(new Date(date.startDate)),
+      date: Timestamp.fromDate(tDate),
       categoryId: category,
       sourceId,
       accountId,
     });
 
-    router.push('/dashboard');
+    router.push('/transactions');
   };
 
   return (
@@ -141,7 +148,7 @@ export default function CreateTransactionForm() {
             <Autocomplete
               value={account}
               onChange={handleAccountChange}
-              options={accounts.map((account) => account.name)}
+              options={accounts.map((account) => `${account.provider} ${account.name}`)}
             />
           </div>
         </div>
@@ -165,6 +172,7 @@ export default function CreateTransactionForm() {
               value={date}
               onChange={(value) => setDate(value)}
             />
+            <input name="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
         </div>
 

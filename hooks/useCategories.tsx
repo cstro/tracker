@@ -1,29 +1,27 @@
 import { useEffect, useState } from 'react';
 
 import { fetchCategories } from '@/firebase/firestore/getData';
+import { Category } from '@/types/firestore/api.types';
 
 export default function useCategories() {
-  const [categories, setCategories] = useState<any>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    fetchCategories().then((data) => {
-      setCategories(
-        data.sort((a: any, b: any) => a.name.localeCompare(b.name))
-      );
-    });
+    fetch();
   }, []);
 
-  const parentCategories = categories.filter(
-    (category: any) => !category.parentId
-  );
+  const fetch = async () => {
+    const data = await fetchCategories();
+    setCategories(data.sort((a, b) => a.name.localeCompare(b.name)));
+  };
 
-  const childCategories = categories.filter(
-    (category: any) => category.parentId
-  );
+  const parentCategories = categories.filter((category) => !category.parentId);
 
-  const groupedCategories = parentCategories.map((parentCategory: any) => {
+  const childCategories = categories.filter((category) => category.parentId);
+
+  const groupedCategories = parentCategories.map((parentCategory) => {
     const children = childCategories.filter(
-      (childCategory: any) => childCategory.parentId === parentCategory.id
+      (childCategory) => childCategory.parentId === parentCategory.id
     );
 
     return {
@@ -37,5 +35,6 @@ export default function useCategories() {
     groupedCategories,
     parentCategories,
     childCategories,
+    refetch: fetch,
   };
 }

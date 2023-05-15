@@ -1,9 +1,10 @@
 'use client';
 
+import { useFirestore } from '@/context/FirestoreContext';
 import useCategories from '@/hooks/useCategories';
 
 export default function CategoryList() {
-  const { groupedCategories } = useCategories();
+  const { groupedCategories } = useFirestore();
 
   return (
     <ul>

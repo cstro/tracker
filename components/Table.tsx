@@ -6,8 +6,20 @@ export function Table({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Tbody({ children }: { children: React.ReactNode }) {
-  return <tbody className="border-t border-slate-100">{children}</tbody>;
+export function Tbody({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <tbody
+      className={`border-t border-slate-100 text-gray-600 text-sm ${className}`}
+    >
+      {children}
+    </tbody>
+  );
 }
 
 export function Tr({ children }: { children: React.ReactNode }) {
